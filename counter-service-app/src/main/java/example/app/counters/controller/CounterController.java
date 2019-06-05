@@ -26,23 +26,25 @@ public class CounterController {
 	public String count(@PathVariable("name") String counterName) {
 
 		long t0 = System.currentTimeMillis();
+		long count = this.counterService.getCount(counterName);
 
-		return String.format(HEADER_ONE, this.counterService.getCount(counterName),
-			System.currentTimeMillis() - t0);
+		return String.format(HEADER_ONE, count, System.currentTimeMillis() - t0);
 	}
 
 	@GetMapping("counters/{name}/current")
 	public String currentCount(@PathVariable("name") String counterName) {
 
 		long t0 = System.currentTimeMillis();
+		long currentCount = this.counterService.getCurrentCount(counterName);
 
-		return String.format(HEADER_ONE, this.counterService.getCurrentCount(counterName),
-			System.currentTimeMillis() - t0);
+		return String.format(HEADER_ONE, currentCount, System.currentTimeMillis() - t0);
 	}
 
 	@GetMapping("counters/{name}/reset")
 	public String reset(@PathVariable("name") String counterName) {
+
 		this.counterService.reset(counterName);
+
 		return String.format(HEADER_ONE, "0", "NA");
 	}
 
@@ -50,6 +52,8 @@ public class CounterController {
 	public String use(@PathVariable("name") String counterName,
 			@RequestParam(name = "count", required = false, defaultValue = "0") long count) {
 
-		return String.format(HEADER_ONE, this.counterService.use(Counter.of(counterName).with(count)).getCount(), "NA");
+		Counter counter = this.counterService.use(Counter.of(counterName).with(count));
+
+		return String.format(HEADER_ONE, counter.getCount(), "NA");
 	}
 }
