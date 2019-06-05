@@ -19,6 +19,7 @@
 	<modules>
 		<module>counter-service-core</module>
 		<module>counter-service-app</module>
+		<module>httpsession-caching</module>
 	</modules>
 
 	<name>counter-service</name>
