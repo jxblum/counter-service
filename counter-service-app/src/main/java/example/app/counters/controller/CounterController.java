@@ -9,15 +9,9 @@ import example.app.counters.model.Counter;
 import example.app.counters.service.CounterService;
 import lombok.RequiredArgsConstructor;
 
-/**
- * The CountersController class...
- *
- * @author John Blum
- * @since 1.0.0
- */
 @RestController
 @RequiredArgsConstructor
-public class CountersController {
+public class CounterController {
 
 	private static final String HEADER_ONE = "<h1>%s</h1>";
 
