@@ -1,0 +1,1 @@
+query --query="SELECT counter.key, counter.value FROM /Counters.entrySet counter"
