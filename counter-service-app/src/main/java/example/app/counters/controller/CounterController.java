@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import example.app.counters.model.Counter;
+import example.app.counters.repo.CounterRepository;
 import example.app.counters.service.CounterService;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class CounterController {
 
 	private static final String HEADER_ONE = "<h1>%s - %s ms</h1>";
+
+	private final CounterRepository counterRepository;
 
 	private final CounterService counterService;
 
@@ -35,7 +38,10 @@ public class CounterController {
 	public String currentCount(@PathVariable("name") String counterName) {
 
 		long t0 = System.currentTimeMillis();
-		long currentCount = this.counterService.getCurrentCount(counterName);
+
+		long currentCount = this.counterRepository.findById(counterName)
+			.map(Counter::getCount)
+			.orElse(0L);
 
 		return String.format(HEADER_ONE, currentCount, System.currentTimeMillis() - t0);
 	}
@@ -43,7 +49,7 @@ public class CounterController {
 	@GetMapping("counters/{name}/reset")
 	public String reset(@PathVariable("name") String counterName) {
 
-		this.counterService.reset(counterName);
+		this.counterRepository.deleteById(counterName);
 
 		return String.format(HEADER_ONE, "0", "NA");
 	}
@@ -52,7 +58,7 @@ public class CounterController {
 	public String use(@PathVariable("name") String counterName,
 			@RequestParam(name = "count", required = false, defaultValue = "0") long count) {
 
-		Counter counter = this.counterService.use(Counter.of(counterName).with(count));
+		Counter counter = this.counterRepository.save(Counter.of(counterName).with(count));
 
 		return String.format(HEADER_ONE, counter.getCount(), "NA");
 	}
